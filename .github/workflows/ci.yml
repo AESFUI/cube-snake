@@ -16,7 +16,8 @@ jobs:
   build:
     # Имена заданий — «build (debug)» и «build (release)»: они станут обязательными проверками main (#3).
     name: build (${{ matrix.preset }})
-    runs-on: windows-latest
+    # windows-2022, а не windows-latest: в latest нет VS 2022 (docs/adr/0001-ci-runner.md).
+    runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
