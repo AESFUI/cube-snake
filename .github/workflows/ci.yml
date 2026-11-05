@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload cube_snake.exe
         if: matrix.preset == 'release'
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           # В pull_request github.sha — merge-коммит; берём head ветки, чтобы артефакт совпадал с коммитом PR.
           name: cube_snake-${{ github.event.pull_request.head.sha || github.sha }}
