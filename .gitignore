@@ -1,0 +1,11 @@
+# Сборка CMake
+/build/
+/out/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Локальные настройки Claude Code
+.claude/settings.local.json
