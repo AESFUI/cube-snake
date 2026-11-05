@@ -1,4 +1,5 @@
-# NFR-2: .exe не должен зависеть от динамического CRT (MSVCP*, VCRUNTIME*, ucrtbase*, api-ms-win-crt-*).
+# NFR-2: .exe не должен зависеть от динамического CRT
+# (MSVCP*, VCRUNTIME*, ucrtbase*, api-ms-win-crt-*, старые MSVCR<N>*, concrt*, vcomp*).
 # Запуск: pwsh .github/scripts/check-static-crt.ps1 build/release/bin/Release/cube_snake.exe
 param([Parameter(Mandatory)][string]$ExePath)
 $ErrorActionPreference = 'Stop'
@@ -12,9 +13,8 @@ $output = & $dumpbin /nologo /dependents $ExePath
 if ($LASTEXITCODE -ne 0) { throw "dumpbin завершился с кодом $LASTEXITCODE" }
 $output
 
-$dynamicCrt = $output | Select-String -Pattern '(?i)\b(msvcp|vcruntime|ucrtbase|api-ms-win-crt)'
+$dynamicCrt = $output | Select-String -Pattern '(?i)\b(msvcp|vcruntime|ucrtbase|api-ms-win-crt|msvcr\d|concrt|vcomp)'
 if ($dynamicCrt) {
-    Write-Error "Найдена зависимость от динамического CRT: $($dynamicCrt -join ', ')"
-    exit 1
+    throw "Найдена зависимость от динамического CRT: $($dynamicCrt -join ', ')"
 }
 Write-Host 'OK: динамического CRT нет'

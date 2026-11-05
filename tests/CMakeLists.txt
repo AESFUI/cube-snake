@@ -6,6 +6,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
     GIT_TAG        v3.7.1
     GIT_SHALLOW    TRUE
+    SYSTEM         # заголовки Catch2 — системные: наши /W4 /WX на них не действуют
 )
 FetchContent_MakeAvailable(Catch2)
 
