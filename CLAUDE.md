@@ -8,10 +8,11 @@
 ```
 cmake --preset debug   && cmake --build --preset debug   && ctest --preset debug
 cmake --preset release && cmake --build --preset release && ctest --preset release
-cube_snake.exe --smoke-test   # 60 кадров на WARP вне экрана, код 0
+pwsh .github/scripts/check-static-crt.ps1 build/release/bin/Release/cube_snake.exe
 ```
 
-Точные пути к `.exe` фиксируются в задаче, которая вводит сборку.
+Исполняемые файлы: `build/<preset>/bin/<Debug|Release>/` — `cube_snake.exe`, `tests.exe`.
+CI (`.github/workflows/ci.yml`) повторяет эти шаги и выкладывает `cube_snake.exe` артефактом.
 
 ## Модули и зависимости
 
@@ -30,6 +31,9 @@ cube_snake.exe --smoke-test   # 60 кадров на WARP вне экрана, �
 - Понятные имена, комментарий у неочевидной математики, функции до ~50 строк.
 - COM-объекты только через `Microsoft::WRL::ComPtr`.
 - Логика детерминирована: тик и зерно случайных чисел передаются снаружи.
+- Флаги компиляции — через цель `project_options` (`cmake/ProjectOptions.cmake`); каждая наша цель линкует её `PRIVATE`.
+- Заголовки модуля — в `src/<модуль>/include/<модуль>/`, подключаются как `"<модуль>/файл.hpp"`.
+- Имена тестов Catch2 — латиницей: ctest на Windows передаёт фильтр в ANSI, кириллица не находится.
 
 ## Процесс
 

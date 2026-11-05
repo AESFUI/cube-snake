@@ -122,7 +122,7 @@ MVP включает полный игровой цикл на шести гра
 | Текст | Direct2D и DirectWrite поверх кадра |
 | Сборка | CMake, пресеты `debug` и `release` |
 | Тесты | Catch2 через `FetchContent` |
-| CI | GitHub Actions, `windows-latest` |
+| CI | GitHub Actions, `windows-2022` (не `windows-latest`: там нет VS 2022, см. `docs/adr/0001-ci-runner.md`) |
 
 Игровой движок не используем. Новую зависимость можно добавить только через отдельное решение в `docs/adr/`.
 
