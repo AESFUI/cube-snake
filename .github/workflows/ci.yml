@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # Имена заданий — «build (debug)» и «build (release)»: они станут обязательными проверками main (#3).
+    name: build (${{ matrix.preset }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [debug, release]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }}
+
+      - name: Build
+        run: cmake --build --preset ${{ matrix.preset }}
+
+      - name: Test
+        run: ctest --preset ${{ matrix.preset }}
+
+      - name: Check static CRT (NFR-2)
+        if: matrix.preset == 'release'
+        shell: pwsh
+        run: ./.github/scripts/check-static-crt.ps1 build/release/bin/Release/cube_snake.exe
+
+      - name: Upload cube_snake.exe
+        if: matrix.preset == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cube_snake-${{ github.sha }}
+          path: build/release/bin/Release/cube_snake.exe
+          if-no-files-found: error
